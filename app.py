@@ -127,7 +127,7 @@ selected = option_menu(
         "Preprocessing",
         "Clustering",
         "Prediksi",
-        "Evaluasi"
+      
     ],
     icons=[
         "house",
@@ -146,11 +146,22 @@ selected = option_menu(
 # =====================================================
 if selected == "Dashboard":
     st.header("Dashboard")
+    
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Jumlah Data", len(df_result))
     col2.metric("Jumlah Fitur", X.shape[1])
     col3.metric("Jumlah Cluster", len(np.unique(clusters)))
     col4.metric("Silhouette Score", round(sil_score, 4))
+    
+    # Penjelasan Silhouette Score di bawah metrik
+    st.info(
+        """
+        **Silhouette Score** digunakan untuk mengukur kualitas clustering.
+        Nilai mendekati 1 menunjukkan cluster yang terbentuk semakin baik 
+        dan terpisah dengan jelas. Nilai yang diperoleh adalah **{}**, 
+        yang berarti kualitas cluster cukup baik.
+        """.format(round(sil_score, 4))
+    )
 
     st.markdown("---")
     st.subheader("Distribusi Cluster")
