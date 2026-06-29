@@ -318,7 +318,7 @@ elif selected == "Prediksi":
         except FileNotFoundError:
             data_baru.to_csv("prediksi_baru.csv", index=False)
 
-        st.success("Data prediksi berhasil disimpan ke prediksi_baru.csv")
+        st.warning("Data prediksi berhasil disimpan ke prediksi_baru.csv")
 
     # Tampilkan riwayat prediksi
     st.subheader("Riwayat Prediksi Tersimpan")
