@@ -222,19 +222,19 @@ elif selected == "Prediksi":
                 horizontal=True
             )
             chatting = st.radio(
-                "Frekuensi Chatting",
+                "Frekuensi Chatting (1=Sangat Jarang, 5=Sangat Sering)",
                 options=[1, 2, 3, 4, 5],
                 index=2,
                 horizontal=True
             )
             streaming_video = st.radio(
-                "Frekuensi Streaming Video",
+                "Frekuensi Streaming Video (1=Sangat Jarang, 5=Sangat Sering)",
                 options=[1, 2, 3, 4, 5],
                 index=2,
                 horizontal=True
             )
             musik = st.radio(
-                "Frekuensi Musik",
+                "Frekuensi Musik (1=Sangat Jarang, 5=Sangat Sering)",
                 options=[1, 2, 3, 4, 5],
                 index=2,
                 horizontal=True
@@ -242,19 +242,19 @@ elif selected == "Prediksi":
 
         with col2:
             game_mobile = st.radio(
-                "Frekuensi Game Mobile",
+                "Frekuensi Game Mobile (1=Sangat Jarang, 5=Sangat Sering)",
                 options=[1, 2, 3, 4, 5],
                 index=2,
                 horizontal=True
             )
             ecommerce = st.radio(
-                "Frekuensi E-commerce",
+                "Frekuensi E-commerce (1=Sangat Jarang, 5=Sangat Sering)",
                 options=[1, 2, 3, 4, 5],
                 index=2,
                 horizontal=True
             )
             transportasi_online = st.radio(
-                "Frekuensi Transportasi Online",
+                "Frekuensi Transportasi Online (1=Sangat Jarang, 5=Sangat Sering)",
                 options=[1, 2, 3, 4, 5],
                 index=2,
                 horizontal=True
@@ -266,7 +266,9 @@ elif selected == "Prediksi":
             )
 
         # Aplikasi favorit tidak digunakan dalam model prediksi
-        submitted = st.form_submit_button("Prediksi Cluster")
+        col_submit1, col_submit2, col_submit3 = st.columns([1, 1, 1])
+        with col_submit3:
+            submitted = st.form_submit_button("Prediksi Cluster", use_container_width=True)
 
     if submitted:
         durasi_map = {"< 1 jam": 1, "1–3 jam": 2, "3–5 jam": 3, "5–7 jam": 4, "> 7 jam": 5}
