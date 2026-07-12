@@ -6,9 +6,8 @@ import joblib
 from streamlit_option_menu import option_menu
 from sklearn.metrics import silhouette_score
 
-# =====================================================
+
 # PAGE CONFIG
-# =====================================================
 st.set_page_config(
     page_title="Clustering Penggunaan Aplikasi Digital",
     page_icon="📱",
@@ -24,9 +23,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# =====================================================
+
 # LOAD MODEL & SCALER
-# =====================================================
 try:
     model = joblib.load("kmeans_model.pkl")
     scaler = joblib.load("scaler.pkl")
@@ -34,9 +32,8 @@ except FileNotFoundError:
     st.error("File model atau scaler tidak ditemukan. Pastikan kmeans_model.pkl dan scaler.pkl ada di folder yang sama dengan app.py")
     st.stop()
 
-# =====================================================
-# LOAD DATASET (dari file lokal, tanpa upload)
-# =====================================================
+
+# LOAD DATASET
 @st.cache_data
 def load_dataset():
     file_path = "dataset.csv"
@@ -49,9 +46,8 @@ def load_dataset():
 
 df_raw = load_dataset()
 
-# =====================================================
+
 # RENAME KOLOM (sesuai dengan form asli)
-# =====================================================
 df = df_raw.copy()
 df = df.rename(columns={
     "Seberapa sering Anda menggunakan aplikasi media sosial (Instagram, TikTok, dll)?  ": "sosial_media",
@@ -63,9 +59,8 @@ df = df.rename(columns={
     "Seberapa sering Anda menggunakan aplikasi transportasi online (Gojek, Grab, dll)?  ": "transportasi_online"
 })
 
-# =====================================================
+
 # DURASI MAPPING
-# =====================================================
 durasi_mapping = {
     "< 1 jam": 1,
     "1–3 jam": 2,
@@ -83,9 +78,8 @@ if durasi_col not in df.columns:
 
 df["durasi_jam"] = df[durasi_col].map(durasi_mapping)
 
-# =====================================================
+
 # FITUR MODEL
-# =====================================================
 feature_columns = [
     "sosial_media",
     "chatting",
@@ -98,9 +92,8 @@ feature_columns = [
 ]
 X = df[feature_columns]
 
-# =====================================================
+
 # SCALING & PREDIKSI
-# =====================================================
 X_scaled = scaler.transform(X)
 clusters = model.predict(X_scaled)
 
@@ -116,9 +109,8 @@ df_result["Kategori"] = df_result["Cluster"].map(cluster_label)
 
 sil_score = silhouette_score(X_scaled, clusters)
 
-# =====================================================
+
 # NAVBAR
-# =====================================================
 selected = option_menu(
     menu_title=None,
     options=[
@@ -141,9 +133,7 @@ selected = option_menu(
     orientation="horizontal"
 )
 
-# =====================================================
 # DASHBOARD
-# =====================================================
 if selected == "Dashboard":
     st.header("Dashboard")
     
@@ -167,16 +157,13 @@ if selected == "Dashboard":
     st.subheader("Distribusi Cluster")
     st.bar_chart(df_result["Kategori"].value_counts())
 
-# =====================================================
 # DATASET
-# =====================================================
 elif selected == "Dataset":
     st.header("Dataset")
     st.dataframe(df_result, use_container_width=True)
 
-# =====================================================
+
 # PREPROCESSING
-# =====================================================
 elif selected == "Preprocessing":
     st.header("Preprocessing")
     st.subheader("Data Setelah Transformasi")
@@ -186,9 +173,8 @@ elif selected == "Preprocessing":
     scaled_df = pd.DataFrame(X_scaled, columns=X.columns)
     st.dataframe(scaled_df.head(), use_container_width=True)
 
-# =====================================================
+
 # CLUSTERING
-# =====================================================
 elif selected == "Clustering":
     st.header("Hasil Clustering")
     st.dataframe(df_result, use_container_width=True)
@@ -204,9 +190,8 @@ elif selected == "Clustering":
         mime="text/csv"
     )
 
-# =====================================================
+
 # PREDIKSI
-# =====================================================
 elif selected == "Prediksi":
     st.header("Prediksi Cluster untuk Responden Baru")
     st.write("Masukkan data responden baru sesuai dengan pola penggunaan aplikasi digital.")
@@ -328,9 +313,8 @@ elif selected == "Prediksi":
     except FileNotFoundError:
         st.info("Belum ada data prediksi tersimpan.")
 
-# =====================================================
+
 # EVALUASI
-# =====================================================
 elif selected == "Evaluasi":
     st.header("Evaluasi Model")
     st.metric("Silhouette Score", round(sil_score, 4))
